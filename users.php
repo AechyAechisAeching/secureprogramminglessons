@@ -2,17 +2,24 @@
 session_start();
 include 'includes/db.php';
 
-if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true){
-    header("location: index.php");
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: index.php");
     exit;
 }
-
-// show users
+if (
+    !isset($_SESSION['user']) ||
+    !isset($_SESSION['user']['isAdmin']) ||
+    $_SESSION['user']['isAdmin'] != 1
+) {
+    echo "<h2>ACCESS DENIED <br> RETURN BACK.</h2>";
+    exit;
+}
 
 $stmt = $pdo->prepare("SELECT * FROM user");
 $stmt->execute();
 $users = $stmt->fetchAll();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="nl">
@@ -39,6 +46,7 @@ $users = $stmt->fetchAll();
         <tbody>
         <?php foreach ($users as $user): ?>
             <tr>
+                <!-- User balance, nothing to do with user self -->
                 <td class="border-b p-2"><?= $user['id'] ?></td>
                <td class="border-b p-2"><a href="transacties.php?id=<?= $user['id'] ?>"><?= $user['username'] ?></a></td>
                 <td class="border-b p-2">€<?= number_format($user['balance'], 2, ',', '.') ?></td>
