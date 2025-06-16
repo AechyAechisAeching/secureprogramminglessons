@@ -11,7 +11,7 @@ if (
     !isset($_SESSION['user']['isAdmin']) ||
     $_SESSION['user']['isAdmin'] != 1
 ) {
-    echo "<h2>ACCESS DENIED <br> RETURN BACK.</h2>";
+    echo "<h2>ACCESS DENIED <br> Please return back..</h2>";
     exit;
 }
 
